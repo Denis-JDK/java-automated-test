@@ -2,8 +2,11 @@ import org.assertj.core.api.SoftAssertions;
 import org.iteco_QA_testing.Calculator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class CalculatorTest {
     private Calculator calculator;
@@ -29,7 +32,7 @@ public class CalculatorTest {
         this.softly.assertAll();
     }
     @DisplayName("Base positive test for sum")//присваиваем более расширенное название для отчета, в build/reports/index.html видно его
-    @RepeatedTest(value = 2, name = "{displayName} {currentRepetition}/{totalRepetition}") //количество повторение теста
+   // @RepeatedTest(value = 2, name = "{displayName} {currentRepetition}/{totalRepetition}") //количество повторение теста
     @Tag("positive") // тэг, позволяет фильтровать при запуске из терминала, тесты по тэгам
     @ParameterizedTest
     //@ValueSource(ints = {1,-10}) указываем первому параметру несколько последовательных значений, тест запускается последовательно с каждым из них
@@ -48,10 +51,41 @@ public class CalculatorTest {
 
         //мегко проходит по списку assert, и не прерывает тестирование пока все не проверит.
        // SoftAssertions softly = new SoftAssertions();
-        softly.assertThat(expectedResult).isEqualTo(actualResult).as("We expected "+ expectedResult+ "but was "+ actualResult);
+        softly.assertThat(actualResult).isEqualTo(expectedResult).as("We expected "+ expectedResult+ "but was "+ actualResult);
         //в этом методе упадет программа если какой то из assert из списка не прошел. Его обязательно поэтому нужно писать.
       //  softly.assertAll();
     }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/test_data.csv") //параметаризируем из файла
+    public void divideTest(int firstValue, int secondValue, int expectedResult){
+        double actualResult= calculator.divide(firstValue,secondValue);
+
+        //проверяем соответствует ли полученный результат ожидаемому
+        softly.assertThat(actualResult).isEqualTo(expectedResult);
+    }
+
+    private static Stream<Arguments> testDataForSumCollectionValues(){
+        return Stream.of(
+                Arguments.of(Arrays.asList(1,2,4),7),
+                Arguments.of(Arrays.asList(-1,0,1),0)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("testDataForSumCollectionValues")
+    public void sumOfCollectionValuesTest(List<Integer> numbers, long expectedResult){
+        long actualResult = calculator.sum(numbers);
+
+        softly.assertThat(actualResult).isEqualTo(expectedResult);
+
+
+    }
+
+
+
+
+
     @Test
     @Disabled //отмечаем при необходимости временно не действующий тест, чтоб остальные отработали.
     @Tag("broken")
@@ -59,8 +93,11 @@ public class CalculatorTest {
 
     }
 
+
+    //тест ниже дублирует код, решение аннотация @ParameterizedTest+@CsvSource/@ValueSource в которых прописываем значения в параметры теста
     @DisplayName("Base negative test for sum")
     @Tag("negative")
+    @Test
     public void sumNegativeValueTest(){
         int firstValue = -10;
         int secondValue = -20;
