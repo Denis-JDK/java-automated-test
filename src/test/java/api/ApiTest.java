@@ -46,16 +46,18 @@ public class ApiTest extends BaseApiTest {
 
 
 
-        given()
-                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
-                .body(gsonMapping.toJson(customer))
-                .post("/customer")
+//        given()
+//                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
+//                .body(gsonMapping.toJson(customer))
+//                .post("/customer")
+        requests.createCustomer(customer)
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_CREATED);
 
-        given()
-                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
-                .get("/customer" + customer.getId())
+//        given()
+//                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
+//                .get("/customer" + customer.getId())
+        requests.getCustomer(customer.getId())
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_OK)
                 .body("$", hasKey("firstName")) //проверяем существует ли поле
@@ -83,23 +85,8 @@ public class ApiTest extends BaseApiTest {
     @MethodSource("testDataForSumCollectionValues")
     public void createCustomerTest(Customer expectCustomer){
 
-
-        given()
-                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
-                .body(gsonMapping.toJson(expectCustomer))
-                .post("/customer")
-                .then()
-                .assertThat().statusCode(HttpStatus.SC_CREATED);
-
-        Customer actualCustomer = given()
-                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
-                .get("/customer" + expectCustomer.getId())
-                .then()
-                .assertThat().statusCode(HttpStatus.SC_OK)
-                .body("$", hasKey("firstName")) //проверяем существует ли поле
-                .body("lastName", is("Swith")) //проверяем значение поля
-                .body("email", is("jana.swith@company.com"))
-                .extract().body().as(Customer.class);
+        successfulRequests.createCustomer(expectCustomer);
+        Customer actualCustomer=successfulRequests.getCustomer(expectCustomer.getId());
 
         softly.assertThat(actualCustomer).isEqualTo(expectCustomer);
 
