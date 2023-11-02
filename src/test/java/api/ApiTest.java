@@ -1,3 +1,5 @@
+package api;
+
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -17,21 +19,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.is;
 
-public class ApiTest {
-    //одна спецификация на все тесты
-    private Specifications specifications;
-    private Gson gsonMapping;
-    @BeforeAll
-    public static void restAssured(){
-        //добавили логирование запросов и ответов перед всеми тестами благодаря static и аннотации @BeforeAll
-        RestAssured.filters(new RequestLoggingFilter(),new ResponseLoggingFilter());
-    }
-    @BeforeEach
-    public void setupTest(){
-        //в ней указали URL, Content Type
-        specifications = new Specifications();
-        gsonMapping = new Gson();
-    }
+public class ApiTest extends BaseApiTest {
+
 
     @Test
     public void googleTest(){
@@ -97,7 +86,6 @@ public class ApiTest {
                 .body("email", is("jana.swith@company.com"))
                 .extract().body().as(Customer.class);
 
-        SoftAssertions softly = new SoftAssertions();
         softly.assertThat(actualCustomer).isEqualTo(expectCustomer);
 
     }
