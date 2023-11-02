@@ -49,7 +49,7 @@ public class ApiTest {
                 .assertThat().statusCode(HttpStatus.SC_CREATED);
 
         given()
-                .get("/customer" + id)
+                .get("/customer" + customer.getId())
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_OK)
                 .body("$", hasKey("firstName")) //проверяем существует ли поле
