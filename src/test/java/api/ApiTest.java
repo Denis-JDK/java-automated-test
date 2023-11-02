@@ -12,8 +12,13 @@ import org.iteco_QA_testing.api.models.Specifications;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasKey;
@@ -59,14 +64,24 @@ public class ApiTest extends BaseApiTest {
 
     }
 
-    @Test
-    public void createCustomerTest(){
-       Customer expectCustomer= Customer.builder()
-               .id("100")
-               .firstName("Jana")
-               .sureName("Swith")
-               .email("jana.swith@company.com").build();
+    private static Stream<Arguments> testDataForSumCollectionValues(){
+        return Stream.of(
+                Arguments.of( Customer.builder()
+                        .id("100")
+                        .firstName("Jana")
+                        .sureName("Swith")
+                        .email("jana.swith@company.com").build()),
+                Arguments.of(Customer.builder()
+                        .id("200")
+                        .firstName("Fana")
+                        .sureName("Kwith")
+                        .email("djanas.swith@company.com").build())
+        );
+    }
 
+    @ParameterizedTest
+    @MethodSource("testDataForSumCollectionValues")
+    public void createCustomerTest(Customer expectCustomer){
 
 
         given()
