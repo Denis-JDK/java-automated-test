@@ -32,7 +32,7 @@ public class SuccessfulRequests {
     public void deleteCustomer(String customerId){
          requests.deleteCustomer(customerId)
                 .then()
-                .assertThat().statusCode(HttpStatus.SC_OK);
+                .assertThat().statusCode(HttpStatus.SC_ACCEPTED);
 
     }
 }
