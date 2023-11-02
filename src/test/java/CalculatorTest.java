@@ -17,6 +17,7 @@ public class CalculatorTest {
     @BeforeAll
     public static void setupBeforeAllTest(){
 
+
     }
 
     //метод выполняется перед всеми методами, благодаря аннотации
