@@ -4,6 +4,7 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
+import org.assertj.core.api.SoftAssertions;
 import org.iteco_QA_testing.api.models.Customer;
 import org.iteco_QA_testing.api.models.Specifications;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,6 +20,7 @@ import static org.hamcrest.Matchers.is;
 public class ApiTest {
     //одна спецификация на все тесты
     private Specifications specifications;
+    private Gson gsonMapping;
     @BeforeAll
     public static void restAssured(){
         //добавили логирование запросов и ответов перед всеми тестами благодаря static и аннотации @BeforeAll
@@ -28,6 +30,7 @@ public class ApiTest {
     public void setupTest(){
         //в ней указали URL, Content Type
         specifications = new Specifications();
+        gsonMapping = new Gson();
     }
 
     @Test
@@ -40,20 +43,18 @@ public class ApiTest {
     }
 
     @Test
-    public void createCustomerTest(){
-       Customer customer= Customer.builder()
-               .id("100")
-               .firstName("Jana")
-               .sureName("Swith")
-               .email("jana.swith@company.com").build();
+    public void createCustomerAssertByBodyParametersTest(){
+        Customer customer= Customer.builder()
+                .id("100")
+                .firstName("Jana")
+                .sureName("Swith")
+                .email("jana.swith@company.com").build();
 
 
-        Gson gsonMapper = new Gson();
-        String customerJson = gsonMapper.toJson(customer);
 
         given()
                 .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
-                .body(customerJson)
+                .body(gsonMapping.toJson(customer))
                 .post("/customer")
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_CREATED);
@@ -66,6 +67,39 @@ public class ApiTest {
                 .body("$", hasKey("firstName")) //проверяем существует ли поле
                 .body("lastName", is("Swith")) //проверяем значение поля
                 .body("email", is("jana.swith@company.com"));
+
+    }
+
+    @Test
+    public void createCustomerTest(){
+       Customer expectCustomer= Customer.builder()
+               .id("100")
+               .firstName("Jana")
+               .sureName("Swith")
+               .email("jana.swith@company.com").build();
+
+
+
+        given()
+                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
+                .body(gsonMapping.toJson(expectCustomer))
+                .post("/customer")
+                .then()
+                .assertThat().statusCode(HttpStatus.SC_CREATED);
+
+        Customer actualCustomer = given()
+                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
+                .get("/customer" + expectCustomer.getId())
+                .then()
+                .assertThat().statusCode(HttpStatus.SC_OK)
+                .body("$", hasKey("firstName")) //проверяем существует ли поле
+                .body("lastName", is("Swith")) //проверяем значение поля
+                .body("email", is("jana.swith@company.com"))
+                .extract().body().as(Customer.class);
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(actualCustomer).isEqualTo(expectCustomer);
+
     }
 
 }
