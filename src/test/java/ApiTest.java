@@ -1,12 +1,14 @@
+import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
+import org.iteco_QA_testing.api.models.Customer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.net.http.HttpResponse;
+
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasKey;
@@ -31,15 +33,16 @@ public class ApiTest {
         //проверка на получение кода 200, если не 200 то тест падает
     }
 
+    @Test
     public void createCustomerTest(){
+        Customer customer = new Customer("100","Jana","Swith","jana.swith@company.com");
         String id = "100"; //вынесли id из JSON POST в переменную чтоб потом было проще подставить в GET проверку, а создали ли мы данный обьект.
+
+        Gson gsonMapper = new Gson();
+        String customerJson = gsonMapper.toJson(customer);
+
         given()
-                .body("{\n"+
-                        " \"id\": \"100\",\n"+
-                        " \"firstName\": \"Jane\",\n"+
-                        " \"lastName\": \"Swith\",\n"+
-                        " \"email\": \"jana.swith@company.com\"\n"+
-                        "}")
+                .body(customerJson)
                 .contentType(ContentType.JSON)
                 .post("/customer")
                 .then()
