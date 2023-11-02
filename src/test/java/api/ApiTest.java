@@ -44,7 +44,7 @@ public class ApiTest extends BaseApiTest {
                 .sureName("Swith")
                 .email("jana.swith@company.com").build();
 
-
+        createdCustomers.add(customer); //добавляем созданного customer в коллекцию, для последующей очистки созданных сущностей, после тестирования
 
 //        given()
 //                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
@@ -86,6 +86,7 @@ public class ApiTest extends BaseApiTest {
     public void createCustomerTest(Customer expectCustomer){
 
         successfulRequests.createCustomer(expectCustomer);
+        createdCustomers.add(expectCustomer); //добавляем созданного customer в коллекцию, для последующей очистки созданных сущностей, после тестирования
         Customer actualCustomer=successfulRequests.getCustomer(expectCustomer.getId());
 
         softly.assertThat(actualCustomer).isEqualTo(expectCustomer);

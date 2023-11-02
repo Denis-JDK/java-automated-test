@@ -1,6 +1,7 @@
 package org.iteco_QA_testing.api.models.request;
 
 import com.google.gson.Gson;
+import io.restassured.response.Response;
 import org.iteco_QA_testing.api.models.Customer;
 import org.iteco_QA_testing.api.models.Specifications;
 
@@ -20,14 +21,19 @@ public class Requests {
        return given()
                 .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
                 .body(gsonMapping.toJson(customer))
-                .post("/customer");
+                .post("/customer/");
 
     }
 
     public io.restassured.response.Response getCustomer(String customerId){
         return given()
                 .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
-                .get("/customer" + customerId);
+                .get("/customer/" + customerId);
 
+    }
+    public Response deleteCustomer(String customerId){
+        return given()
+                .spec(specifications.baseRequestSpec())
+                .delete("/customer/" + customerId);
     }
 }

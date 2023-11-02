@@ -28,4 +28,11 @@ public class SuccessfulRequests {
                 .body("email", is("jana.swith@company.com"))
                 .extract().body().as(Customer.class);
     }
+
+    public void deleteCustomer(String customerId){
+         requests.deleteCustomer(customerId)
+                .then()
+                .assertThat().statusCode(HttpStatus.SC_OK);
+
+    }
 }
