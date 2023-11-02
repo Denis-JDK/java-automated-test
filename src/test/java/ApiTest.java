@@ -5,7 +5,9 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.iteco_QA_testing.api.models.Customer;
+import org.iteco_QA_testing.api.models.Specifications;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -15,13 +17,17 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.is;
 
 public class ApiTest {
-
+    //одна спецификация на все тесты
+    private Specifications specifications;
     @BeforeAll
     public static void restAssured(){
         //добавили логирование запросов и ответов перед всеми тестами благодаря static и аннотации @BeforeAll
         RestAssured.filters(new RequestLoggingFilter(),new ResponseLoggingFilter());
-        // убрали базовый URL из каждого теста и сделали его по умолчанию
-        RestAssured.baseURI="http://localhost:8081";
+    }
+    @BeforeEach
+    public void setupTest(){
+        //в ней указали URL, Content Type
+        specifications = new Specifications();
     }
 
     @Test
@@ -46,13 +52,14 @@ public class ApiTest {
         String customerJson = gsonMapper.toJson(customer);
 
         given()
+                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
                 .body(customerJson)
-                .contentType(ContentType.JSON)
                 .post("/customer")
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_CREATED);
 
         given()
+                .spec(specifications.baseRequestSpec()) //получаем из класса Specification URL Content Type
                 .get("/customer" + customer.getId())
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_OK)
