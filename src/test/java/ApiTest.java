@@ -18,6 +18,8 @@ public class ApiTest {
     public static void restAssured(){
         //добавили логирование запросов и ответов перед всеми тестами благодаря static и аннотации @BeforeAll
         RestAssured.filters(new RequestLoggingFilter(),new ResponseLoggingFilter());
+        // убрали базовый URL из каждого теста и сделали его по умолчанию
+        RestAssured.baseURI="http://localhost:8081";
     }
 
     @Test
@@ -39,12 +41,12 @@ public class ApiTest {
                         " \"email\": \"jana.swith@company.com\"\n"+
                         "}")
                 .contentType(ContentType.JSON)
-                .post("http://localhost:8081/customer")
+                .post("/customer")
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_CREATED);
 
         given()
-                .get("http://localhost:8081/customer" + id)
+                .get("/customer" + id)
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_OK)
                 .body("$", hasKey("firstName")) //проверяем существует ли поле
