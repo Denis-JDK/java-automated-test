@@ -35,8 +35,12 @@ public class ApiTest {
 
     @Test
     public void createCustomerTest(){
-        Customer customer = new Customer("100","Jana","Swith","jana.swith@company.com");
-        String id = "100"; //вынесли id из JSON POST в переменную чтоб потом было проще подставить в GET проверку, а создали ли мы данный обьект.
+       Customer customer= Customer.builder()
+               .id("100")
+               .firstName("Jana")
+               .sureName("Swith")
+               .email("jana.swith@company.com").build();
+
 
         Gson gsonMapper = new Gson();
         String customerJson = gsonMapper.toJson(customer);
