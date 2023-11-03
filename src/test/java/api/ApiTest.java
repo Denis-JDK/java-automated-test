@@ -92,5 +92,17 @@ public class ApiTest extends BaseApiTest {
         softly.assertThat(actualCustomer).isEqualTo(expectCustomer);
 
     }
+    public void updateTest(){
+        Specifications specifications = new Specifications();
+        Customer customer = Customer.builder()
+                .id("201")
+                .firstName("Sara")
+                .sureName("Konor")
+                .email("terminator@film90.com").build();
+
+        given()
+                .put("\"http://google.com/\"")
+                .body()
+    }
 
 }

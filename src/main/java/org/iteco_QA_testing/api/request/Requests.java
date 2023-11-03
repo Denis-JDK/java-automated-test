@@ -1,4 +1,4 @@
-package org.iteco_QA_testing.api.models.request;
+package org.iteco_QA_testing.api.request;
 
 import com.google.gson.Gson;
 import io.restassured.response.Response;

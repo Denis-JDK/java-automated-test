@@ -1,4 +1,4 @@
-package org.iteco_QA_testing.api.models.request;
+package org.iteco_QA_testing.api.request;
 
 import org.apache.http.HttpStatus;
 import org.iteco_QA_testing.api.models.Customer;
