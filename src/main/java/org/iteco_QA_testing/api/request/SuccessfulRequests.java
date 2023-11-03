@@ -3,8 +3,7 @@ package org.iteco_QA_testing.api.request;
 import org.apache.http.HttpStatus;
 import org.iteco_QA_testing.api.models.Customer;
 
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class SuccessfulRequests {
     private Requests requests;
@@ -14,12 +13,12 @@ public class SuccessfulRequests {
     }
 
     public void createCustomer(Customer customer){
-        String response = requests.createCustomer(customer)
+         requests.createCustomer(customer)
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_CREATED)
-                .extract().body().asString();
+                .body(equalTo("Customer stored correctly")); //проверяем не только по коду ответа SC_CREATED, но еще и по строке в теле ответа на операцию создания сущности
 
-        System.out.println(response);
+
     }
 
     public Customer getCustomer(String customerId){
@@ -41,6 +40,9 @@ public class SuccessfulRequests {
     public void updateCustomer(Customer customer){
         requests.updateCustomer(customer)
                 .then()
-                .assertThat().statusCode(HttpStatus.SC_ACCEPTED);
+                .assertThat().statusCode(HttpStatus.SC_ACCEPTED)
+                //добавляет проверку сообщений, возможно они нужны на фронтэнде, поэтому их проверяем
+                .body(equalTo("Customer updated correctly")); //проверяем не только по коду ответа SC_CREATED, но еще и по строке в теле ответа на операцию создания сущности
+
     }
 }
