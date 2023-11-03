@@ -7,6 +7,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.SoftAssertions;
+import org.iteco_QA_testing.api.data.Generator;
 import org.iteco_QA_testing.api.models.Customer;
 import org.iteco_QA_testing.api.models.Specifications;
 import org.junit.jupiter.api.BeforeAll;
@@ -92,17 +93,24 @@ public class ApiTest extends BaseApiTest {
         softly.assertThat(actualCustomer).isEqualTo(expectCustomer);
 
     }
-    public void updateTest(){
-        Specifications specifications = new Specifications();
-        Customer customer = Customer.builder()
-                .id("201")
-                .firstName("Sara")
-                .sureName("Konor")
-                .email("terminator@film90.com").build();
+    public void updateCustomerTest(){
+        //Generation new customer
+        Customer customer = generator.getCustomer();
 
-        given()
-                .put("\"http://google.com/\"")
-                .body()
+        //Creation of generated customer
+        successfulRequests.createCustomer(customer);
+
+        //Creation updated customer entity
+        Customer updatedCustomer = generator.getCustomer();
+        updatedCustomer.setId(customer.getId()); //задаем updateCustomer id уже созданного customer
+        //Updating of existing customer
+        successfulRequests.updateCustomer(updatedCustomer);
+
+        Customer actualCustomer = successfulRequests.getCustomer(customer.getId());
+
+        // Asser customer is updated
+        softly.assertThat(actualCustomer).isEqualTo(updatedCustomer);
+
     }
 
 }

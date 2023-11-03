@@ -3,8 +3,14 @@ package org.iteco_QA_testing.api.data;
 import org.apache.commons.lang3.RandomStringUtils;
 
 public class RandomData {
-    private static final int DEFAULT_STRING_LENGTH =10;
-    private static final int DEFAULT_NAME_LENGTH =7;
+    public static final int DEFAULT_STRING_LENGTH =10;
+    public static final int DEFAULT_NAME_LENGTH =7;
+    public static final int DEFAULT_NUMBER_LENGTH =3;
+
+    public String getId(){
+        return RandomStringUtils.randomNumeric(DEFAULT_NUMBER_LENGTH);
+    }
+
     public String getString(){
         return RandomStringUtils.random(DEFAULT_STRING_LENGTH, true, false);
     }

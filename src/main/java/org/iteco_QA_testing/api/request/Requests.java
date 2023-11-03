@@ -36,4 +36,11 @@ public class Requests {
                 .spec(specifications.baseRequestSpec())
                 .delete("/customer/" + customerId);
     }
+
+    public Response updateCustomer(Customer customer){
+        return given()
+                .spec(specifications.baseRequestSpec())
+                .body(gsonMapping.toJson(customer))
+                .put("/customer/" + customer.getId());
+    }
 }
