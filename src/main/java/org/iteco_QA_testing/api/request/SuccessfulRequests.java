@@ -14,9 +14,12 @@ public class SuccessfulRequests {
     }
 
     public void createCustomer(Customer customer){
-        requests.createCustomer(customer)
+        String response = requests.createCustomer(customer)
                 .then()
-                .assertThat().statusCode(HttpStatus.SC_CREATED);
+                .assertThat().statusCode(HttpStatus.SC_CREATED)
+                .extract().body().asString();
+
+        System.out.println(response);
     }
 
     public Customer getCustomer(String customerId){
