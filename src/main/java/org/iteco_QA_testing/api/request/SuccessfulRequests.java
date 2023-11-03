@@ -38,6 +38,6 @@ public class SuccessfulRequests {
     public void updateCustomer(Customer customer){
         requests.updateCustomer(customer)
                 .then()
-                .assertThat().statusCode(HttpStatus.SC_OK);
+                .assertThat().statusCode(HttpStatus.SC_ACCEPTED);
     }
 }
