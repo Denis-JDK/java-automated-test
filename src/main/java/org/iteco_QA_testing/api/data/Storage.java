@@ -1,5 +1,6 @@
 package org.iteco_QA_testing.api.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Storage {
@@ -7,6 +8,7 @@ public class Storage {
     private List<String> customerIds;
 
     private Storage() {
+        this.customerIds = new ArrayList<>();
     }
 
     public static Storage getInstance(){
