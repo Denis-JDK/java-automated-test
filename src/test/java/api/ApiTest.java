@@ -12,6 +12,7 @@ import org.iteco_QA_testing.api.models.Customer;
 import org.iteco_QA_testing.api.models.Specifications;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,8 +23,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class ApiTest extends BaseApiTest {
 
@@ -110,6 +110,24 @@ public class ApiTest extends BaseApiTest {
 
         // Asser customer is updated
         softly.assertThat(actualCustomer).isEqualTo(updatedCustomer);
+
+    }
+    @Test
+    @DisplayName("Create user with existing id") //пробуем создать юзера с существующим id
+    public void createUserWithExistingIdTest(){
+        Customer customer = generator.getCustomer();
+
+        successfulRequests.createCustomer(customer);
+        //создаем тестового customer с таким же id
+        Customer newCustomer = generator.getCustomer();
+        newCustomer.setId(customer.getId());
+
+        //Теперь проверяем создание customer с одинаковыми Id, важно делаем request потому что не ожидаем успешное создание (successfulRequest)
+        //проверяем requests что пришел код и сообщение о неуспешном создание
+        requests.createCustomer(newCustomer)
+                .then()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body(equalTo("Customer with " + customer.getId()+ "already exists"));
 
     }
 

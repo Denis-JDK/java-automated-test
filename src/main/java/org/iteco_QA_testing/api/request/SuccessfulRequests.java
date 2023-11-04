@@ -45,4 +45,5 @@ public class SuccessfulRequests {
                 .body(equalTo("Customer updated correctly")); //проверяем не только по коду ответа SC_CREATED, но еще и по строке в теле ответа на операцию создания сущности
 
     }
+
 }
