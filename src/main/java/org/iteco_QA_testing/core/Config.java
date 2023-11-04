@@ -4,7 +4,7 @@ public class Config {
     private String apiUrl;
 
     public Config() {
-        this.apiUrl = new PropertiesLoader().getProperty("apiUrl");
+        this.apiUrl = System.getProperty("apiUrl")!= null ? System.getProperty("apiUrl") : new PropertiesLoader().getProperty("apiUrl");
     }
 
     public String getApiUrl() {
