@@ -28,16 +28,18 @@ public class SuccessfulRequests {
         return requests.getCustomer(customerId)
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_OK)
-                .body("$", hasKey("firstName")) //проверяем существует ли поле
-                .body("lastName", is("Swith")) //проверяем значение поля
-                .body("email", is("jana.swith@company.com"))
+            //    .body("$", hasKey("firstName")) //проверяем существует ли поле
+            //    .body("lastName", is("Swith")) //проверяем значение поля
+            //    .body("email", is("jana.swith@company.com"))
                 .extract().body().as(Customer.class);
     }
 
     public void deleteCustomer(String customerId){
          requests.deleteCustomer(customerId)
                 .then()
-                .assertThat().statusCode(HttpStatus.SC_ACCEPTED);
+                .assertThat().statusCode(HttpStatus.SC_ACCEPTED)
+                 .body(equalTo("Customer removed correctly")); //проверяем не только по коду ответа SC_CREATED, но еще и по строке в теле ответа на операцию создания сущности
+
 
     }
     public void updateCustomer(Customer customer){

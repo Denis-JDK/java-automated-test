@@ -81,6 +81,7 @@ public class ApiTest extends BaseApiTest {
 
     }
     @Test
+    //тест с генерацией сущности из класса Generator
     public void updateCustomerTest(){
         //Generation new customer
         Customer customer = generator.getCustomer();
@@ -118,6 +119,22 @@ public class ApiTest extends BaseApiTest {
                 .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body(equalTo("Customer with " + customer.getId()+ "already exists"));
 
+    }
+    @Test
+    @DisplayName("Delete user") //тестируем API удаление сущности
+    @Tag("Positive")
+    public void deleteCustomerTest(){
+        Customer customer = generator.getCustomer();
+        successfulRequests.createCustomer(customer);
+
+        successfulRequests.deleteCustomer(customer.getId());
+
+        // так как вызываем get удаленного customer, то используем request и у него делаем проверку на код ошибки и на сообщение в боди ответа
+        // а не successfulRequests потому что в нем проверка успешные запросы.
+        requests.getCustomer(customer.getId())
+                .then()
+                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(equalTo("Customer with " + customer.getId()+ "not found"));
     }
 
 }
