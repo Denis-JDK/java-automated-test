@@ -6,6 +6,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import org.assertj.core.api.SoftAssertions;
 import org.iteco_QA_testing.api.data.Generator;
 import org.iteco_QA_testing.api.data.RandomData;
+import org.iteco_QA_testing.api.data.Storage;
 import org.iteco_QA_testing.api.models.Customer;
 import org.iteco_QA_testing.api.request.SuccessfulRequests;
 import org.iteco_QA_testing.api.request.Requests;
@@ -23,7 +24,6 @@ public class BaseApiTest {
     protected Requests requests;
     protected SuccessfulRequests successfulRequests;
     protected SoftAssertions softly;
-    protected List<Customer> createdCustomers;
     protected RandomData randomData;
     protected Generator generator;
     @BeforeAll
@@ -37,13 +37,12 @@ public class BaseApiTest {
         requests = new Requests();
         successfulRequests = new SuccessfulRequests();
         softly = new SoftAssertions();
-        createdCustomers = new ArrayList<>();
         randomData = new RandomData();
         generator= new Generator();
     }
 
-    @AfterEach //чистим после каждого метода
+    @AfterEach //чистим после каждого метода, созданные сущности во время тестирования
     public void cleanData(){
-        createdCustomers.forEach(customer ->successfulRequests.deleteCustomer(customer.getId()));
+        Storage.getInstance().getCustomerIds().forEach(customerId->successfulRequests.deleteCustomer(customerId));
     }
 }

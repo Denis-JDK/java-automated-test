@@ -1,6 +1,7 @@
 package org.iteco_QA_testing.api.request;
 
 import org.apache.http.HttpStatus;
+import org.iteco_QA_testing.api.data.Storage;
 import org.iteco_QA_testing.api.models.Customer;
 
 import static org.hamcrest.Matchers.*;
@@ -18,6 +19,8 @@ public class SuccessfulRequests {
                 .assertThat().statusCode(HttpStatus.SC_CREATED)
                 .body(equalTo("Customer stored correctly")); //проверяем не только по коду ответа SC_CREATED, но еще и по строке в теле ответа на операцию создания сущности
 
+        //сохраняем созданную сущность в Storage, для очистки после проведения тестирования.
+        Storage.getInstance().getCustomerIds().add(customer.getId());
 
     }
 
