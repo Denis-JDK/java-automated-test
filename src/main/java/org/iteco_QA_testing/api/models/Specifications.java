@@ -2,6 +2,7 @@ package org.iteco_QA_testing.api.models;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
+import org.iteco_QA_testing.core.Config;
 
 public class Specifications {
 
@@ -10,7 +11,7 @@ public class Specifications {
         RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
         //если мы знаем что в запросах будет JSON то можно его указать в спецификации, а не в каждом методе
         requestSpecBuilder.setContentType(ContentType.JSON);
-        requestSpecBuilder.setBaseUri("http://localhost:8081");
+        requestSpecBuilder.setBaseUri(new Config().getApiUrl());
         return requestSpecBuilder.build();
     }
 }

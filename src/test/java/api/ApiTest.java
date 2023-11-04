@@ -134,7 +134,7 @@ public class ApiTest extends BaseApiTest {
         requests.getCustomer(customer.getId())
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
-                .body(equalTo("Customer with " + customer.getId()+ "not found"));
+                .body(equalTo("No customer with id " + customer.getId()));
     }
 
 }
