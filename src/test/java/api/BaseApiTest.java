@@ -43,6 +43,6 @@ public class BaseApiTest {
 
     @AfterEach //чистим после каждого метода(благодаря аннотации), созданные сущности во время тестирования
     public void cleanData(){
-        Storage.getInstance().getCustomerIds().forEach(customerId->successfulRequests.deleteCustomer(customerId));
+        Storage.getInstance().getCustomerIds().forEach(customerId->requests.deleteCustomer(customerId));
     }
 }
